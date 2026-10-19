@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>მარის სივრცე</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600&family=Noto+Serif+Georgian:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#120a12;--sf:rgba(255,255,255,.06);--tx:#f8ecf1;--mu:#b9a0ac;--ac:#ff5c8a;--ac2:#ffa3bf;--ok:#47d6a0;--bd:rgba(255,255,255,.13);color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#fff3f6;--sf:rgba(255,255,255,.75);--tx:#2b1620;--mu:#7b6370;--ac:#d63f6f;--ac2:#a92c55;--ok:#1e9a6a;--bd:rgba(80,20,40,.16);color-scheme:light}}
+:root[data-theme="light"]{--bg:#fff3f6;--sf:rgba(255,255,255,.75);--tx:#2b1620;--mu:#7b6370;--ac:#d63f6f;--ac2:#a92c55;--ok:#1e9a6a;--bd:rgba(80,20,40,.16);color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+*{box-sizing:border-box}
+body{margin:0;min-height:100%;color:var(--tx);font:16px/1.65 "Noto Sans Georgian",system-ui,sans-serif;background:radial-gradient(900px 500px at 15% -5%,color-mix(in srgb,var(--ac) 28%,transparent),transparent),radial-gradient(800px 500px at 100% 100%,color-mix(in srgb,#7a5cff 22%,transparent),transparent),var(--bg);background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+#bg{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+nav,main{position:relative;z-index:1}
+h1,h2,h3{font-family:"Noto Serif Georgian",Georgia,serif;margin:.2em 0 .4em}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;gap:6px;overflow-x:auto;padding:10px 12px;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 70%,transparent);border-bottom:1px solid var(--bd);scrollbar-width:none}
+nav button{flex:none;border:1px solid var(--bd);background:var(--sf);color:var(--tx);padding:8px 14px;border-radius:99px;font:inherit;font-size:14px;cursor:pointer;transition:.25s}
+nav button.on{background:var(--ac);color:#fff;border-color:var(--ac);box-shadow:0 0 18px color-mix(in srgb,var(--ac) 60%,transparent)}
+main{max-width:780px;margin:0 auto;padding:18px 14px 70px}
+section{display:none}section.on{display:block;animation:in .55s cubic-bezier(.2,.8,.2,1)}
+@keyframes in{from{opacity:0;transform:translateY(18px)}}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.18)}30%{transform:scale(1)}45%{transform:scale(1.1)}}
+@keyframes shine{to{background-position:200% 0}}
+@keyframes flt{50%{transform:translateY(-8px)}}
+.card{background:var(--sf);backdrop-filter:blur(12px);border:1px solid var(--bd);border-radius:20px;padding:18px;margin:12px 0;box-shadow:0 10px 40px rgba(0,0,0,.18)}
+.mu{color:var(--mu);font-size:14px}
+.btn{background:linear-gradient(135deg,var(--ac),#b05cff);color:#fff;border:0;border-radius:14px;padding:12px 22px;font:inherit;font-weight:600;cursor:pointer;transition:.2s;box-shadow:0 6px 22px color-mix(in srgb,var(--ac) 45%,transparent)}
+.btn:hover{transform:translateY(-2px)}.btn:active{transform:scale(.96)}.btn:disabled{opacity:.4}
+.btn.alt{background:var(--sf);color:var(--tx);border:1px solid var(--bd);box-shadow:none}
+.btn.alt:hover{border-color:var(--ac)}
+.hero{text-align:center;padding:34px 6px 6px}
+.hero .m{font-size:54px;animation:flt 4s ease-in-out infinite}
+.hero h1{font-size:clamp(32px,9vw,54px);background:linear-gradient(90deg,var(--ac),#b05cff,#5cc8ff,var(--ac));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:12px}
+.tile{cursor:pointer;transition:.3s}.tile:hover{transform:translateY(-5px);border-color:var(--ac)}
+.tile .e{font-size:34px}
+.done::after{content:" ✓";color:var(--ok)}
+.pg{height:8px;background:var(--bd);border-radius:9px;overflow:hidden;margin-top:8px}.pg i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--ac),#b05cff);transition:width .7s}
+.bar{position:relative;height:38px;background:var(--bd);border-radius:12px;overflow:hidden;margin:14px 0}
+.bar.ok{box-shadow:0 0 0 3px var(--ok)}.bar.bad{box-shadow:0 0 0 3px #ff4d4d}
+.zone{position:absolute;top:0;bottom:0;background:var(--ok);opacity:.75;border-radius:8px}
+.mark{position:absolute;top:0;bottom:0;width:7px;margin-left:-3px;background:#fff;border-radius:4px;box-shadow:0 0 12px #fff}
+canvas{width:100%;display:block;border-radius:16px;border:1px solid var(--bd);touch-action:none;background:#0d0712}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.ch{display:block;width:100%;text-align:left;margin:8px 0}
+.env{cursor:pointer;display:flex;align-items:center;gap:12px}.env .e{font-size:32px}
+.letter{white-space:pre-line;font-family:"Noto Serif Georgian",serif;overflow:hidden;max-height:0;opacity:0;transition:max-height .7s,opacity .7s,margin .4s}
+.open .letter{max-height:900px;opacity:1;margin-top:12px;padding-top:12px;border-top:1px dashed var(--bd)}
+textarea,input[type=text]{width:100%;background:var(--sf);color:var(--tx);border:1px solid var(--bd);border-radius:14px;padding:12px;font:inherit;margin-bottom:8px}
+textarea{min-height:190px;resize:vertical}
+.hp{font-size:20px;letter-spacing:2px}
+#a-ic{font-size:56px;text-align:center;animation:flt 3.5s ease-in-out infinite}
+#a-text{font-family:"Noto Serif Georgian",serif;min-height:96px;font-size:17px}
+#s-heart{animation:beat 1.1s infinite;filter:drop-shadow(0 0 14px var(--ac))}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<nav id="nav"></nav>
+<main>
+
+<section id="home" class="on">
+ <div class="hero"><div class="m">🌙</div><h1>მარის სივრცე</h1>
+ <p class="mu">ეს საიტი მხოლოდ შენთვის შეიქმნა. ითამაშე, წაიკითხე და ბოლოს დაწერე.</p></div>
+ <div class="card"><b id="pg-t">გავლილი: 0/5</b><div class="pg"><i id="pg"></i></div></div>
+ <div class="grid" id="tiles"></div>
+</section>
+
+<section id="surgery">
+ <h2>🩺 ოპერაცია</h2>
+ <p class="mu">ხუთი ეტაპი. დააჭირე „ახლა“ (ან Space), როცა თეთრი ხაზი მწვანე ზონაშია. ყოველ ეტაპზე ზონა ვიწროვდება და ხელი სწრაფდება. შეცდომის უფლება სამია.</p>
+ <div class="card">
+  <div class="row"><svg id="s-heart" viewBox="0 0 100 90" width="64"><path d="M50 85C10 55 0 35 0 22 0 8 11 0 24 0c10 0 19 5 26 15C57 5 66 0 76 0c13 0 24 8 24 22 0 13-10 33-50 63z" fill="var(--ac)"/></svg>
+  <div><div class="hp" id="s-hp"></div><h3 id="s-step" style="margin:0"></h3></div></div>
+  <canvas id="ecg"></canvas>
+  <div class="bar" id="s-bar"><div class="zone" id="s-zone"></div><div class="mark" id="s-mark"></div></div>
+  <p id="s-msg" class="mu"></p>
+  <div class="row"><button class="btn" id="s-go">ახლა</button><button class="btn alt" id="s-reset">თავიდან</button></div>
+ </div>
+</section>
+
+<section id="run">
+ <h2>🏃‍♀️ დაბრკოლებები</h2>
+ <p class="mu">დახტომა: Space, ↑ ან შეხება. ჰაერში მეორედაც შეგიძლია ახტე. მიაღწიე ბოლომდე.</p>
+ <div class="hp" id="r-hp"></div>
+ <canvas id="rc"></canvas>
+ <div class="row"><button class="btn" id="r-go">დაწყება</button><span id="r-msg" class="mu"></span></div>
+</section>
+
+<section id="shoot">
+ <h2>🎯 მარის ბრძოლა</h2>
+ <p class="mu">მარი ებრძვის შიშს, ეჭვს და გადავადებას. გადაადგილება: თითი/მაუსი ან ისრები. სროლა ავტომატურია. გაანადგურე 25 მტერი, მერე ბოსი. გული გაჩენილ ❤️-ს აგროვებს სიცოცხლეს.</p>
+ <div class="hp" id="h-hp"></div>
+ <canvas id="hc"></canvas>
+ <div class="row"><button class="btn" id="h-go">დაწყება</button><span id="h-msg" class="mu"></span></div>
+</section>
+
+<section id="adv">
+ <h2>🕯️ თავგადასავალი</h2>
+ <div class="card"><div class="pg"><i id="a-p"></i></div><div id="a-ic"></div><p id="a-text"></p><div id="a-ch"></div></div>
+</section>
+
+<section id="letters">
+ <h2>💌 წერილები</h2>
+ <p class="mu">გახსენი ერთი-ერთი. არ აჩქარდე.</p>
+ <div id="l-list"></div>
+</section>
+
+<section id="reply">
+ <h2>✍️ შენი წერილი</h2>
+ <div id="inbox" class="card" hidden><h3>📥 მიღებული წერილები</h3><div id="inb" class="mu">იტვირთება...</div></div>
+ <p class="mu">მოვიდა დრო, შენ დაწერო. გულახდილად უპასუხე.</p>
+ <div class="card">
+  <p class="mu">რა მოგეწონა საიტში? რომელმა თამაშმა გაგახარა ან გაგაბრაზა? წერილებმა რა შეგრძნება დაგიტოვა? და რას ფიქრობ იმ ადამიანზე, ვინც ეს ყველაფერი შენთვის გააკეთა?</p>
+  <input type="text" id="f-name" placeholder="შენი სახელი (არასავალდებულო)">
+  <textarea id="f-text" placeholder="ძვირფასო..."></textarea>
+  <label class="mu"><input type="checkbox" id="f-stat" checked> დავურთო ჩემი თამაშის შედეგები</label>
+  <div class="row"><button class="btn" id="f-save">გაგზავნა 💌</button><button class="btn alt" id="f-copy">დააკოპირე</button></div>
+  <p id="f-msg" class="mu">დააჭირე „გაგზავნა“ და წერილი პირდაპირ აქვე შეინახება.</p>
+ </div>
+</section>
+</main>
+
+<script>
+var SENDER="ერთი ადამიანი, ვისაც შენი ღიმილი ახსოვს";
+var EMAIL="kiba7654321@gmail.com";
+var $=function(s){return document.querySelector(s)};
+var S={done:{},stat:{},path:[]};
+try{S=Object.assign(S,JSON.parse(localStorage.getItem("mari2")||"{}"))}catch(e){}
+function save(){try{localStorage.setItem("mari2",JSON.stringify(S))}catch(e){}}
+function hearts(n,t){return "❤️".repeat(Math.max(n,0))+"🖤".repeat(Math.max(t-n,0))}
+var AC=null;
+function beep(f,d,ty){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain();o.type=ty||"sine";o.frequency.value=f;g.gain.value=.05;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.0001,AC.currentTime+d);o.stop(AC.currentTime+d)}catch(e){}}
+function fit(c,w,h){var d=Math.min(2,window.devicePixelRatio||1);c.width=w*d;c.height=h*d;c.style.aspectRatio=w+"/"+h;var g=c.getContext("2d");g.setTransform(d,0,0,d,0,0);return g}
+function loop(o){var last=performance.now(),acc=0;(function f(t){if(!o.on)return;acc+=Math.min(100,t-last);last=t;while(acc>=16.667&&o.on){o.up();acc-=16.667}o.dr();requestAnimationFrame(f)})(last)}
+function burst(a,x,y,n,c){for(var i=0;i<n;i++){var an=Math.random()*6.3,v=1+Math.random()*3;a.push({x:x,y:y,vx:Math.cos(an)*v,vy:Math.sin(an)*v,a:1,c:c})}}
+function pstep(a){a.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.a-=.03});return a.filter(function(p){return p.a>0})}
+function pdraw(g,a){a.forEach(function(p){g.globalAlpha=Math.max(0,p.a);g.fillStyle=p.c;g.fillRect(p.x-2,p.y-2,4,4)});g.globalAlpha=1}
+
+// ფონი
+(function(){var c=$("#bg"),g=c.getContext("2d"),P=[],W,H;function rs(){W=c.width=innerWidth;H=c.height=innerHeight}rs();addEventListener("resize",rs);
+var cs=getComputedStyle(document.documentElement),ac=cs.getPropertyValue("--ac"),tx=cs.getPropertyValue("--tx");
+for(var i=0;i<55;i++)P.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.8+.5,v:Math.random()*.3+.06,h:Math.random()<.2,p:Math.random()*6});
+(function f(t){g.clearRect(0,0,W,H);P.forEach(function(p){p.y-=p.v;if(p.y<-10){p.y=H+10;p.x=Math.random()*W}g.globalAlpha=.2+.25*Math.sin(t/900+p.p);if(p.h){g.fillStyle=ac;g.font=(p.r*9)+"px serif";g.fillText("♥",p.x,p.y)}else{g.fillStyle=tx;g.beginPath();g.arc(p.x,p.y,p.r,0,7);g.fill()}});g.globalAlpha=1;requestAnimationFrame(f)})(0)})();
+
+// ნავიგაცია
+var T=[["home","მთავარი","🌙"],["surgery","ოპერაცია","🩺","სიზუსტე და მოთმინება"],["run","დაბრკოლებები","🏃‍♀️","რეაქცია და გამძლეობა"],["shoot","მარის ბრძოლა","🎯","გამბედაობა"],["adv","თავგადასავალი","🕯️","გადაწყვეტილებები"],["letters","წერილები","💌","ხუთი წერილი"],["reply","შენი წერილი","✍️","ბოლო ნაბიჯი"]];
+var nav=$("#nav"),tiles=$("#tiles"),cur="home";
+T.forEach(function(t){
+ var b=document.createElement("button");b.textContent=t[2]+" "+t[1];b.dataset.t=t[0];b.onclick=function(){go(t[0])};nav.appendChild(b);
+ if(t[3]){var d=document.createElement("div");d.className="card tile";d.dataset.t=t[0];d.innerHTML='<div class="e">'+t[2]+'</div><h3 class="'+(S.done[t[0]]?"done":"")+'">'+t[1]+'</h3><div class="mu">'+t[3]+'</div>';d.onclick=function(){go(t[0])};tiles.appendChild(d)}
+});
+function prog(){var n=["surgery","run","shoot","adv","letters"].filter(function(k){return S.done[k]}).length;$("#pg-t").textContent="გავლილი: "+n+"/5";$("#pg").style.width=n*20+"%"}
+function mark(id){S.done[id]=1;save();var t=document.querySelector('.tile[data-t="'+id+'"] h3');if(t)t.className="done";prog()}
+prog();nav.firstChild.classList.add("on");
+function stopAll(){R.on=false;H.on=false;s.on=false;clearInterval(tw)}
+function go(id){
+ stopAll();cur=id;
+ document.querySelectorAll("section").forEach(function(x){x.classList.toggle("on",x.id===id)});
+ document.querySelectorAll("nav button").forEach(function(b){b.classList.toggle("on",b.dataset.t===id)});
+ window.scrollTo(0,0);
+ if(id==="surgery")sInit();if(id==="adv")aInit();if(id==="letters")lInit();if(id==="run")rIdle();if(id==="shoot")hIdle();
+}
+
+// Mari
+function mari(g,x,y,t,sc,air){
+ g.save();g.translate(x,y);g.scale(sc,sc);var sw=air?.9:Math.sin(t*.3);
+ g.strokeStyle="#f5d2c2";g.lineWidth=5;g.lineCap="round";g.beginPath();g.moveTo(-5,-22);g.lineTo(-5+sw*10,0);g.moveTo(5,-22);g.lineTo(5-sw*10,0);g.stroke();
+ g.fillStyle="#4a2a22";g.beginPath();g.ellipse(-14,-58+Math.sin(t*.3)*2,5,13,.5+sw*.2,0,7);g.fill();
+ g.fillStyle="#ff5c8a";g.beginPath();g.moveTo(-9,-62);g.lineTo(9,-62);g.lineTo(17,-22);g.lineTo(-17,-22);g.closePath();g.fill();
+ g.fillStyle="#f5d2c2";g.beginPath();g.arc(0,-72,11,0,7);g.fill();
+ g.fillStyle="#4a2a22";g.beginPath();g.arc(0,-75,12,Math.PI,0);g.fill();g.fillRect(-12,-76,5,10);
+ g.fillStyle="#222";g.beginPath();g.arc(4,-72,1.6,0,7);g.fill();g.restore();
+}
+
+// ===== ოპერაცია =====
+var ST=["განაკვეთი","დაზიანებული ქსოვილის გამოყოფა","სისხლძარღვის შეკვრა","უცხო სხეულის ამოღება","ნაკერი"];
+var ec=$("#ecg"),eg=fit(ec,600,70),s={on:false};
+function sInit(){s={on:true,run:true,i:0,l:3,t:0,p:50,c:30+Math.random()*40,ph:0,E:[],up:sUp,dr:sDr};sUI();$("#s-msg").textContent="მზად ხარ?";$("#s-go").disabled=false;loop(s)}
+function sUI(){s.w=32-s.i*3.2;$("#s-hp").textContent="პაციენტი: "+hearts(s.l,3);$("#s-step").textContent=s.i<5?(s.i+1)+"/5 — "+ST[s.i]:"ოპერაცია დასრულდა ✨";var z=$("#s-zone");z.style.left=(s.c-s.w/2)+"%";z.style.width=s.w+"%"}
+function sUp(){
+ if(s.run){s.t+=.026+s.i*.004;s.p=50+49*Math.sin(s.t)}
+ s.ph+=(s.dead?0:(60+(3-s.l)*28)/3600);var q=s.ph%1,y=0;
+ if(!s.dead){if(q<.08)y=-q/.08*26;else if(q<.16)y=-26+(q-.08)/.08*50;else if(q<.22)y=24-(q-.16)/.06*24}
+ s.E.push(y);if(s.E.length>240)s.E.shift();
+}
+function sDr(){
+ $("#s-mark").style.left=s.p+"%";var g=eg;g.clearRect(0,0,600,70);g.strokeStyle=s.dead?"#ff4d4d":"#47d6a0";g.lineWidth=2;g.shadowBlur=8;g.shadowColor=g.strokeStyle;g.beginPath();
+ s.E.forEach(function(v,i){var x=i*600/240;i?g.lineTo(x,35+v):g.moveTo(x,35+v)});g.stroke();g.shadowBlur=0;
+}
+function sFlash(c){var b=$("#s-bar");b.className="bar "+c;setTimeout(function(){b.className="bar"},350)}
+function sHit(){
+ if(cur!=="surgery"||!s.on||!s.run)return;
+ if(Math.abs(s.p-s.c)<=s.w/2){sFlash("ok");beep(660,.15);s.i++;
+  if(s.i>=5){s.run=false;sUI();$("#s-msg").textContent="ხელი არ გაგიკანკალდა. პაციენტი გადარჩა. გილოცავ, ექიმო.";$("#s-go").disabled=true;S.stat.surgery="გავიარე ("+s.l+" სიცოცხლით)";mark("surgery");return}
+  s.c=25+Math.random()*50;s.t=Math.random()*6;$("#s-msg").textContent="ზუსტად! შემდეგ ეტაპზე ხელი უფრო სწრაფია.";sUI()}
+ else{sFlash("bad");beep(130,.25,"sawtooth");s.l--;
+  if(s.l<=0){s.run=false;s.dead=true;sUI();$("#s-msg").textContent="პაციენტი ვერ გადარჩა. სცადე თავიდან, ხელი კიდევ დაგიმშვიდდება.";$("#s-go").disabled=true;S.stat.surgery="ვერ გავიარე";save();return}
+  $("#s-msg").textContent="ხელი შეგიცვა. ღრმად ჩაისუნთქე.";sUI()}
+}
+$("#s-go").onclick=sHit;$("#s-reset").onclick=function(){s.on=false;sInit()};
+document.addEventListener("keydown",function(e){if(e.code==="Space"){if(cur==="surgery"){e.preventDefault();sHit()}if(cur==="run"){e.preventDefault();rJump()}}if(e.code==="ArrowUp"&&cur==="run"){e.preventDefault();rJump()}});
+
+// ===== დაბრკოლებები =====
+var rc=$("#rc"),rg=fit(rc,720,300),R={on:false},GY=250;
+function rHP(){$("#r-hp").textContent=hearts(R.l,3)}
+function rIdle(){R={on:false,l:3,d:0,f:0,y:0,ob:[],pt:[],inv:0,sp:5};rDr();rHP();$("#r-msg").textContent="დააჭირე დაწყებას"}
+function rStart(){R.on=false;R={on:true,y:0,vy:0,j:0,ob:[],d:0,sp:5.5,l:3,inv:0,nx:420,f:0,pt:[],sh:0,up:rUp,dr:rDr};rHP();$("#r-msg").textContent="";loop(R)}
+function rJump(){if(R.on&&R.j<2){R.vy=R.j?11:12.8;R.j++;beep(R.j>1?700:520,.1)}}
+function rEnd(w){R.on=false;rDr();$("#r-msg").textContent=w?"ბოლომდე მიაღწიე 🎉":"გზა ვერ დაასრულე. სცადე ისევ.";S.stat.run=w?"გავიარე":"ვერ გავიარე";if(w)mark("run");save()}
+function rUp(){
+ var r=R;r.f++;r.d+=r.sp;r.sp=5.5+Math.min(2.5,r.d/5000);r.vy-=.62;r.y+=r.vy;if(r.y<=0){r.y=0;r.vy=0;r.j=0}
+ r.nx-=r.sp;if(r.nx<=0){if(Math.random()<.5)r.ob.push({x:760,w:28+Math.random()*14,h:28+Math.random()*22,t:0});else{var n=1+(Math.random()<.4?1:0);r.ob.push({x:760,w:30*n,h:30,t:1})}r.nx=300+Math.random()*240+r.sp*18}
+ r.ob.forEach(function(o){o.x-=r.sp});r.ob=r.ob.filter(function(o){return o.x>-90});
+ if(r.inv>0)r.inv--;if(r.sh>0)r.sh--;
+ if(!r.inv)r.ob.forEach(function(o){if(!r.inv&&o.x+4<124&&o.x+o.w-4>100&&r.y<o.h-4){r.l--;r.inv=80;r.sh=12;beep(120,.25,"sawtooth");rHP();if(r.l<=0)rEnd(false)}});
+ if(r.y===0&&r.f%5===0)r.pt.push({x:100,y:GY,vx:-1-Math.random()*1.5,vy:-Math.random()*1.4,a:1,c:"#c9a7ff"});
+ r.pt=pstep(r.pt);if(r.d>=12000&&r.on)rEnd(true);
+}
+function rDr(){
+ var r=R,g=rg,f=r.f||0,d=r.d||0;g.save();if(r.sh)g.translate((Math.random()-.5)*6,(Math.random()-.5)*6);
+ var gr=g.createLinearGradient(0,0,0,GY);gr.addColorStop(0,"#0b0620");gr.addColorStop(1,"#3a1040");g.fillStyle=gr;g.fillRect(-10,-10,740,320);
+ for(var i=0;i<40;i++){g.fillStyle="rgba(255,255,255,"+(.3+.4*Math.sin(f/30+i))+")";g.fillRect((i*97+7)%720,(i*53)%170,1.6,1.6)}
+ g.fillStyle="#ffe9b8";g.beginPath();g.arc(600,60,26,0,7);g.fill();g.fillStyle="#0b0620";g.beginPath();g.arc(610,54,24,0,7);g.fill();
+ [[.1,"#2a0f3a",70],[.25,"#431349",45]].forEach(function(L){g.fillStyle=L[1];g.beginPath();g.moveTo(0,GY);for(var x=0;x<=740;x+=20)g.lineTo(x,GY-L[2]-L[2]*.6*Math.sin((x+d*L[0])*.011));g.lineTo(740,GY);g.fill()});
+ g.fillStyle="#2a1230";g.fillRect(0,GY,720,60);g.fillStyle="#ff5c8a";g.fillRect(0,GY,720,2);
+ g.fillStyle="rgba(255,255,255,.15)";for(var k=0;k<14;k++)g.fillRect(((k*60-d)%840+840)%840-60,GY+20,30,2);
+ r.ob.forEach(function(o){if(o.t){g.fillStyle="#b9a0ff";for(var x=0;x<o.w;x+=30){g.beginPath();g.moveTo(o.x+x,GY);g.lineTo(o.x+x+15,GY-o.h);g.lineTo(o.x+x+30,GY);g.fill()}}else{g.fillStyle="#6c4a8a";g.beginPath();g.roundRect?g.roundRect(o.x,GY-o.h,o.w,o.h,7):g.rect(o.x,GY-o.h,o.w,o.h);g.fill();g.fillStyle="rgba(255,255,255,.15)";g.fillRect(o.x+4,GY-o.h+4,o.w*.4,4)}});
+ pdraw(g,r.pt||[]);
+ g.globalAlpha=r.inv&&f%8<4?.3:1;mari(g,112,GY-(r.y||0),f,.9,r.y>0);g.globalAlpha=1;
+ g.fillStyle="rgba(255,255,255,.15)";g.fillRect(20,14,680,6);g.fillStyle="#ff5c8a";g.fillRect(20,14,680*Math.min(1,d/12000),6);g.restore();
+}
+$("#r-go").onclick=rStart;rc.addEventListener("pointerdown",rJump);
+
+// ===== მარის ბრძოლა =====
+var hc=$("#hc"),hg=fit(hc,640,440),H={on:false},pj={x:320,y:380},keys={},EN=[["შიში","#8f6bff"],["ეჭვი","#4cc9f0"],["გადავადება","#ffb347"]];
+function hHP(){$("#h-hp").textContent="მარი: "+hearts(H.hp,5)}
+function hIdle(){H={on:false,x:320,y:380,hp:5,b:[],e:[],eb:[],pt:[],pk:[],k:0,sp:0,f:0,sh:0,inv:0};hDr();hHP();$("#h-msg").textContent="დააჭირე დაწყებას"}
+function hStart(){H.on=false;H={on:true,x:320,y:380,hp:5,b:[],e:[],eb:[],pt:[],pk:[],k:0,sp:0,boss:null,f:0,sh:0,inv:0,up:hUp,dr:hDr};hHP();$("#h-msg").textContent="";loop(H)}
+function hEnd(w){H.on=false;hDr();$("#h-msg").textContent=w?"ეჭვების დედოფალი დამარცხდა. მარი თავისუფალია 🎉":"მარი დაეცა. გმირი ისევ დგება, სცადე ისევ.";S.stat.shoot=w?"გავიმარჯვე":"დავმარცხდი";if(w)mark("shoot");save()}
+function hPos(e){var b=hc.getBoundingClientRect();pj.x=(e.clientX-b.left)*640/b.width;pj.y=(e.clientY-b.top)*440/b.height-34;pj.x=Math.max(20,Math.min(620,pj.x));pj.y=Math.max(180,Math.min(410,pj.y))}
+hc.addEventListener("pointermove",hPos);hc.addEventListener("pointerdown",hPos);
+document.addEventListener("keydown",function(e){keys[e.code]=1;if(cur==="shoot"&&e.code.indexOf("Arrow")===0)e.preventDefault()});
+document.addEventListener("keyup",function(e){keys[e.code]=0});
+function hUp(){
+ var h=H;h.f++;
+ if(keys.ArrowLeft)pj.x-=7;if(keys.ArrowRight)pj.x+=7;if(keys.ArrowUp)pj.y-=7;if(keys.ArrowDown)pj.y+=7;
+ pj.x=Math.max(20,Math.min(620,pj.x));pj.y=Math.max(180,Math.min(410,pj.y));
+ h.x+=(pj.x-h.x)*.22;h.y+=(pj.y-h.y)*.22;
+ if(h.f%9===0){h.b.push({x:h.x,y:h.y-52,vx:0});if(h.k>=10){h.b.push({x:h.x-12,y:h.y-46,vx:-1});h.b.push({x:h.x+12,y:h.y-46,vx:1})}}
+ if(!h.boss&&h.sp<25&&h.f%42===0){h.sp++;var ty=Math.floor(Math.random()*3);h.e.push({x:40+Math.random()*560,y:-20,hp:2+Math.floor(h.k/9),t:ty,v:(ty===2?1.7:1)+h.k/45,ph:Math.random()*6,r:22})}
+ if(h.sp>=25&&!h.e.length&&!h.boss){h.boss={x:320,y:-90,hp:90,m:90,r:48};$("#h-msg").textContent="ბოსი გამოჩნდა!"}
+ var B=h.boss;
+ if(B){B.y+=(85-B.y)*.03;B.x=320+220*Math.sin(h.f/70);var ph2=B.hp<45,cd=ph2?55:80;
+  if(h.f%cd===0){var an=Math.atan2(h.y-B.y,h.x-B.x),n=ph2?5:3;for(var i=0;i<n;i++){var a2=an+(i-(n-1)/2)*.25;h.eb.push({x:B.x,y:B.y+30,vx:Math.cos(a2)*3,vy:Math.sin(a2)*3})}}
+  if(h.f%220===0){h.e.push({x:B.x-40,y:B.y+40,hp:2,t:1,v:1.4,ph:1,r:22});h.e.push({x:B.x+40,y:B.y+40,hp:2,t:0,v:1.4,ph:2,r:22})}}
+ h.b.forEach(function(b){b.y-=9;b.x+=b.vx});h.b=h.b.filter(function(b){return b.y>-10});
+ h.eb.forEach(function(b){b.x+=b.vx;b.y+=b.vy});h.eb=h.eb.filter(function(b){return b.y<460&&b.y>-20&&b.x>-20&&b.x<660});
+ h.e.forEach(function(e){e.y+=e.v;if(e.t===1)e.x+=Math.sin(h.f/18+e.ph)*2.2;if(e.t===0)e.x+=Math.sin(h.f/40+e.ph)*.9});
+ h.b.forEach(function(b){h.e.forEach(function(e){if(!b.d&&Math.hypot(b.x-e.x,b.y-e.y)<e.r+6){b.d=1;e.hp--;burst(h.pt,b.x,b.y,3,"#fff");if(e.hp<=0){e.dead=1;h.k++;beep(300+Math.random()*200,.1,"triangle");burst(h.pt,e.x,e.y,14,EN[e.t][1]);if(Math.random()<.14)h.pk.push({x:e.x,y:e.y})}}});
+  if(B&&!b.d&&Math.hypot(b.x-B.x,b.y-B.y)<B.r){b.d=1;B.hp--;burst(h.pt,b.x,b.y,2,"#ff5c8a")}});
+ h.b=h.b.filter(function(b){return !b.d});h.e=h.e.filter(function(e){return !e.dead&&e.y<470});
+ if(h.inv>0)h.inv--;if(h.sh>0)h.sh--;
+ function ouch(){if(h.inv)return;h.hp--;h.inv=70;h.sh=12;beep(110,.3,"sawtooth");hHP();burst(h.pt,h.x,h.y-30,12,"#ff5c8a")}
+ h.e=h.e.filter(function(e){if(Math.hypot(e.x-h.x,e.y-(h.y-30))<e.r+12){ouch();burst(h.pt,e.x,e.y,10,EN[e.t][1]);return false}return true});
+ h.eb=h.eb.filter(function(b){if(Math.hypot(b.x-h.x,b.y-(h.y-30))<18){ouch();return false}return true});
+ h.pk.forEach(function(p){p.y+=1.6});h.pk=h.pk.filter(function(p){if(Math.hypot(p.x-h.x,p.y-(h.y-30))<28){if(h.hp<5){h.hp++;hHP();beep(880,.15)}return false}return p.y<460});
+ h.pt=pstep(h.pt);
+ if(h.hp<=0){hEnd(false);return}if(B&&B.hp<=0){burst(h.pt,B.x,B.y,60,"#ffd166");hEnd(true)}
+}
+function hDr(){
+ var h=H,g=hg,f=h.f||0;g.save();if(h.sh)g.translate((Math.random()-.5)*8,(Math.random()-.5)*8);
+ var gr=g.createLinearGradient(0,0,0,440);gr.addColorStop(0,"#0a0518");gr.addColorStop(1,"#2b0f33");g.fillStyle=gr;g.fillRect(-10,-10,660,460);
+ for(var i=0;i<50;i++){g.fillStyle="rgba(255,255,255,"+(.25+.3*(i%3)/3)+")";g.fillRect((i*83)%640,((i*47)+f*(.4+(i%3)*.4))%440,1.5,1.5+(i%3))}
+ (h.pk||[]).forEach(function(p){g.font="22px serif";g.textAlign="center";g.fillText("❤️",p.x,p.y)});
+ g.shadowBlur=14;g.shadowColor="#ff5c8a";g.fillStyle="#ffb3cb";(h.b||[]).forEach(function(b){g.beginPath();g.arc(b.x,b.y,4,0,7);g.fill()});
+ g.shadowColor="#ff8a3d";g.fillStyle="#ffd0a0";(h.eb||[]).forEach(function(b){g.beginPath();g.arc(b.x,b.y,6,0,7);g.fill()});g.shadowBlur=0;
+ g.textAlign="center";
+ (h.e||[]).forEach(function(e){var c=EN[e.t][1];g.fillStyle=c;g.shadowBlur=14;g.shadowColor=c;g.beginPath();g.arc(e.x,e.y,e.r,0,7);g.fill();g.shadowBlur=0;g.fillStyle="#fff";g.beginPath();g.arc(e.x-7,e.y-4,5,0,7);g.arc(e.x+7,e.y-4,5,0,7);g.fill();g.fillStyle="#111";g.beginPath();g.arc(e.x-6,e.y-3,2.4,0,7);g.arc(e.x+8,e.y-3,2.4,0,7);g.fill();g.fillStyle="#fff";g.font="11px sans-serif";g.fillText(EN[e.t][0],e.x,e.y+e.r+13)});
+ var B=h.boss;if(B){g.fillStyle="#3b1250";g.shadowBlur=24;g.shadowColor="#ff2d6f";g.beginPath();g.arc(B.x,B.y,B.r,0,7);g.fill();g.shadowBlur=0;g.fillStyle="#ff2d6f";g.beginPath();g.arc(B.x-16,B.y-6,8,0,7);g.arc(B.x+16,B.y-6,8,0,7);g.fill();g.font="34px serif";g.fillText("👑",B.x,B.y-40);g.fillStyle="rgba(255,255,255,.2)";g.fillRect(170,10,300,9);g.fillStyle="#ff5c8a";g.fillRect(170,10,300*Math.max(0,B.hp)/B.m,9);g.fillStyle="#fff";g.font="12px sans-serif";g.fillText("ეჭვების დედოფალი",320,34)}
+ else{g.fillStyle="#b9a0ac";g.font="13px sans-serif";g.textAlign="left";g.fillText("მტრები: "+(h.k||0)+"/25",12,22)}
+ if(h.hp>0){g.globalAlpha=h.inv&&f%8<4?.3:1;g.shadowBlur=22;g.shadowColor="#ff5c8a";g.fillStyle="rgba(255,92,138,.25)";g.beginPath();g.arc(h.x,h.y-30,30,0,7);g.fill();g.shadowBlur=0;mari(g,h.x,h.y,f,.78,true);g.globalAlpha=1}
+ pdraw(g,h.pt||[]);g.restore();
+}
+$("#h-go").onclick=hStart;
+
+// ===== თავგადასავალი =====
+var N={
+s:{i:"🌲",t:"მარი ღამის ტყეში იღვიძებს. ხელში წერილი უჭირავს, რომელსაც მისამართი არ აწერია. შორს, ხეებს მიღმა, პატარა შუქი ციმციმებს.",c:[["წავალ შუქისკენ, დრო არ მაქვს დასაკარგი","b","r"],["ჯერ წერილს ამოვიკითხავ","l","p"]]},
+l:{i:"📜",t:"წერილში ერთადერთი წინადადებაა: „გზა იმას ეკუთვნის, ვინც ჩერდება და უსმენს.“ მარი ღრმად ისუნთქავს და გზას ადგება.",c:[["წავალ შუქისკენ","b",""]]},
+b:{i:"🌉",t:"ხიდი ჩამონგრეულია. ქვემოთ ჭავლად მიედინება შავი მდინარე. გვერდით ორი დაფის ნატეხი დევს.",c:[["გადავხტები, ვარჯიში მაქვს","f","r"],["დავაკვირდები და ხიდს ნელა შევაკეთებ","f","p"],["სხვა გზას ვეძებ, ნაპირს გავყვები","f","k"]]},
+f:{i:"🦊",t:"გადაღმა, ბუჩქთან, დაჭრილი მელა წევს. შუქი ახლა უფრო ახლოსაა, მაგრამ ღამე სწრაფად ბნელდება.",c:[["მელას ჭრილობას შევუხვევ, ცოტა დრო წაიღებს","m","k"],["მელას საჭმელს დავუტოვებ და გავაგრძელებ","m","r"],["ვუსმენ, იქნებ რაღაცას მეუბნებოდეს","m","p"]]},
+m:{i:"⛈️",t:"ტყის მიღმა ქარიშხალი იწყება. მთის ბილიკი ვიწროა, შუქი კი უკვე სულ ახლოსაა. გვერდით მოსახერხებელი გამოქვაბული მოჩანს.",c:[["გავიქცევი მთის ბილიკით, სანამ გავა","e","r"],["გამოქვაბულში დავიცდი, სანამ წვიმა გადაივლის","e","p"],["დაჭრილ მელას გავუფრთხილდები და ერთად ვიცდით","e","k"]]}
+};
+var PR={s:0,l:0,b:1,f:2,m:3,e:4},A="s",tr={r:0,p:0,k:0},tw=0;
+function aInit(){A="s";S.path=[];tr={r:0,p:0,k:0};aShow()}
+function typeIn(el,txt,done){clearInterval(tw);var i=0;el.textContent="";
+ function fin(){clearInterval(tw);el.textContent=txt;el.onclick=null;done()}
+ tw=setInterval(function(){i+=2;el.textContent=txt.slice(0,i);if(i>=txt.length)fin()},20);el.onclick=fin}
+function aShow(){
+ var box=$("#a-ch");box.innerHTML="";$("#a-p").style.width=(PR[A]||4)*25+"%";
+ if(A==="e"){var top=Object.keys(tr).sort(function(a,b){return tr[b]-tr[a]})[0];var nm={r:"გამბედაობამ",p:"მოთმინებამ",k:"სითბომ"}[top];
+  $("#a-ic").textContent="🏮";
+  typeIn($("#a-text"),"მარი შუქს აღწევს. ეს შუქურაა. შიგნით პატარა მაგიდაა, ორი ფინჯანი ჩაით, ჯერ კიდევ თბილი. ფანჯარაზე წერილია: „ვიცოდი, რომ მოხვალ. გზას შენ გაგახარა "+nm+", და ვფიქრობ, სწორედ ამიტომ მელოდი ასე ბევრი.“ ვიღაც ახლახან გამოსულა, კარი ღიაა.",function(){
+   S.stat.adv="მარიმ აირჩია: "+({r:"გამბედაობა",p:"მოთმინება",k:"სითბო"}[top]);mark("adv");
+   var b=document.createElement("button");b.className="btn alt ch";b.textContent="↻ თავიდან გავიარო";b.onclick=aInit;box.appendChild(b)});return}
+ var n=N[A];$("#a-ic").textContent=n.i;
+ typeIn($("#a-text"),n.t,function(){n.c.forEach(function(c){var b=document.createElement("button");b.className="btn alt ch";b.textContent=c[0];b.onclick=function(){beep(500,.08);if(c[2])tr[c[2]]++;S.path.push(c[0]);A=c[1];aShow()};box.appendChild(b)})});
+}
+
+// ===== წერილები =====
+var L=[
+["პირველი წერილი","ზოგი ადამიანი ისე შემოდის დღეში, როგორც ფანჯარა, რომელიც აქამდე არ შეგიმჩნევია. შემდეგ აღმოაჩენ, რომ ყველა გზა ამ ფანჯრისკენ გიყურებს.\n\nარ ვიცი, როგორ გიყვე ეს ზუსტად. ამიტომ ვეძებ სხვა სიტყვებს."],
+["მარის ღიმილზე","შენი ღიმილი მოულოდნელად ჩნდება, ისე, თითქოს თვითონაც გიკვირს. სწორედ ამიტომ ყველაზე ძვირფასია.\n\nსაოცარია, როგორ ცვლის ერთი წამი მთელ ოთახს."],
+["ძლიერებაზე","ბევრს ეგონა, რომ ძლიერი ის არის, ვინც არასოდეს იშლება. მე კი ვფიქრობ, რომ ძლიერია ის, ვინც ეცემა, ისევ დგება და მაინც კეთილი რჩება.\n\nეს ყველაფერი შენში დავინახე."],
+["ჩუმი სურვილი","არ მინდა დაგაჩქარო, არც რამე გთხოვო. მინდა უბრალოდ იცოდე, რომ შენთან საუბარი ჩემი დღის საუკეთესო ნაწილია.\n\nგულწრფელობა ზოგჯერ ყველაზე ძვირფასი საჩუქარია, ამიტომ მხოლოდ ამას გიგზავნი."],
+["ბოლო წერილი","თუ აქამდე მოაღწიე, ე.ი. ყურადღებით წაიკითხე. მადლობა ამისთვის.\n\nახლა კი ჩემი ჯერია, გისმენ. დაწერე ის, რასაც გრძნობ. არც სწორი, არც არასწორი პასუხი არ არსებობს. ყველაფერი გულწრფელი კარგია.\n\n— "+SENDER]
+];
+function lInit(){
+ var el=$("#l-list");el.innerHTML="";
+ L.forEach(function(l,i){
+  var d=document.createElement("div");d.className="card";
+  d.innerHTML='<div class="env"><span class="e">✉️</span><div><b>'+l[0]+'</b><div class="mu">გასახსნელად დააჭირე</div></div></div><div class="letter"></div>';
+  d.querySelector(".letter").textContent=l[1];
+  d.querySelector(".env").onclick=function(){d.classList.toggle("open");d.querySelector(".e").textContent=d.classList.contains("open")?"💌":"✉️";beep(600,.08);S["l"+i]=1;if(L.every(function(_,k){return S["l"+k]}))mark("letters");save()};
+  el.appendChild(d);
+ });
+}
+
+// ===== პასუხი =====
+function msg(){
+ var n=$("#f-name").value.trim()||"მარი",o="💌 წერილი მარისგან ("+n+")\n\n"+$("#f-text").value.trim();
+ if($("#f-stat").checked){var st=S.stat,a=[];
+  if(st.surgery)a.push("🩺 ოპერაცია: "+st.surgery);if(st.run)a.push("🏃‍♀️ დაბრკოლებები: "+st.run);if(st.shoot)a.push("🎯 ბრძოლა: "+st.shoot);if(st.adv)a.push("🕯️ თავგადასავალი: "+st.adv);
+  if(a.length)o+="\n\n— — —\nჩემი შედეგები:\n"+a.join("\n")}
+ return o;
+}
+function chk(){if(!$("#f-text").value.trim()){$("#f-msg").textContent="ჯერ რამე დაწერე 🙂";return false}return true}
+var ft=$("#f-text");try{ft.value=localStorage.getItem("mari-draft")||""}catch(e){}
+ft.oninput=function(){try{localStorage.setItem("mari-draft",ft.value)}catch(e){}};
+$("#f-copy").onclick=function(){if(!chk())return;(navigator.clipboard?navigator.clipboard.writeText(msg()):Promise.reject()).then(function(){$("#f-msg").textContent="დაკოპირდა. გადაუგზავნე ადამიანს, ვინც საიტი გაგიზიარა."},function(){ft.select();$("#f-msg").textContent="მონიშნე ტექსტი და ხელით დააკოპირე."})};
+$("#f-save").onclick=async function(){
+ if(!chk())return;var m=msg(),b=$("#f-save");b.disabled=true;
+ try{var db=await claude.use("db");if(!db)throw 0;await db.collection("letters").add({text:m,name:$("#f-name").value.trim(),at:Date.now()});S.sent=1;save();$("#f-msg").textContent="წერილი შენახულია და მიღებულია 💌 მადლობა."}
+ catch(e){try{navigator.clipboard.writeText(m)}catch(x){}$("#f-msg").textContent="ვერ შეინახა (საიტზე შესული არ ხარ?). ტექსტი დაკოპირდა, გადაუგზავნე ადამიანს, ვინც საიტი გაგიზიარა."}
+ b.disabled=false};
+async function loadInbox(){try{var db=await claude.use("db");var q=await db.collection("letters").orderBy("at","desc").get(),el=$("#inb");el.innerHTML="";if(!q.docs.length)el.textContent="ჯერ არაფერი მოსულა";q.docs.forEach(function(d){var v=d.data(),p=document.createElement("div");p.className="letter";p.style.cssText="max-height:none;opacity:1;margin-top:10px;padding-top:10px;border-top:1px dashed var(--bd);color:var(--tx)";p.textContent=new Date(v.at).toLocaleString()+"\n\n"+v.text;el.appendChild(p)})}catch(e){}}
+(async function(){try{var u=await claude.use("user");if(u&&u.isOwner()){$("#inbox").hidden=false;loadInbox()}}catch(e){}})();
+function oldMail(){try{navigator.clipboard.writeText(m)}catch(e){}
+ var u="https://mail.google.com/mail/?view=cm&fs=1&to="+encodeURIComponent(EMAIL)+"&su="+encodeURIComponent("წერილი მარისგან")+"&body="+encodeURIComponent(m);
+ var w=null;try{w=window.open(u,"_blank")}catch(e){}
+ $("#f-msg").textContent=w?"გაიხსნა Gmail უკვე შევსებული წერილით. დააჭირე Send. (ტექსტი დაკოპირებულიცაა.)":"ავტომატურად ვერ გაიხსნა. ტექსტი დაკოპირდა, გამოუგზავნე ფოსტაზე: "+EMAIL;};
+rIdle();hIdle();
+var FORM_URL="https://formspree.io/f/mbgdepdy";
+$("#f-save").onclick=async function(){
+ if(!chk())return;var b=$("#f-save");b.disabled=true;
+ try{var r=await fetch(FORM_URL,{method:"POST",headers:{"Content-Type":"application/json","Accept":"application/json"},body:JSON.stringify({name:$("#f-name").value.trim()||"მარი",message:msg()})});
+  if(!r.ok)throw 0;$("#f-msg").textContent="წერილი გაიგზავნა 💌 მადლობა.";S.sent=1;save()}
+ catch(e){try{navigator.clipboard.writeText(msg())}catch(x){}$("#f-msg").textContent="ვერ გაიგზავნა. ტექსტი დაკოპირდა, გადაუგზავნე ადამიანს, ვინც საიტი გაგიზიარა."}
+ b.disabled=false};
+</script>
+</body>
+</html>
